@@ -79,18 +79,28 @@ export function computeShapeOverlap(exercise, refBBox, drawnBBox, strokes) {
   const dtx = half - drawnBBox.cx * refScale;
   const dty = half - drawnBBox.cy * refScale;
 
-  ctxB.strokeStyle = 'black';
-  ctxB.fillStyle   = 'black';
-  ctxB.lineWidth   = 4; // fixed thickness helps flood-fill close small gaps
-  ctxB.lineCap     = 'round';
-  ctxB.lineJoin    = 'round';
+  ctxB.lineCap  = 'round';
+  ctxB.lineJoin = 'round';
 
   for (const stroke of strokes) {
     const pts = stroke.points;
     if (pts.length === 0) continue;
+
+    if (stroke.isEraser) {
+      const bsz = stroke.brushSize || 4;
+      ctxB.strokeStyle = 'white';
+      ctxB.fillStyle   = 'white';
+      ctxB.lineWidth   = bsz * 2 * refScale;
+    } else {
+      ctxB.strokeStyle = 'black';
+      ctxB.fillStyle   = 'black';
+      ctxB.lineWidth   = 4; // fixed thickness helps flood-fill close small gaps
+    }
+
     if (pts.length === 1) {
+      const r = stroke.isEraser ? (stroke.brushSize || 4) * refScale : 2;
       ctxB.beginPath();
-      ctxB.arc(pts[0].x * refScale + dtx, pts[0].y * refScale + dty, 2, 0, Math.PI * 2);
+      ctxB.arc(pts[0].x * refScale + dtx, pts[0].y * refScale + dty, r, 0, Math.PI * 2);
       ctxB.fill();
       continue;
     }

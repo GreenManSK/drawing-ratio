@@ -48,8 +48,12 @@
       <div class="panel__header">
         <h2>Your Drawing</h2>
         <div class="panel__controls">
+          <div class="tool-toggle">
+            <button id="penBtn" class="btn btn--tool is-active" title="Pen (P)">Pen</button>
+            <button id="eraserBtn" class="btn btn--tool" title="Eraser (E)">Eraser</button>
+          </div>
           <label class="brush-label">
-            Brush
+            Size
             <input type="range" id="brushSize" min="1" max="12" value="3">
           </label>
           <button id="undoBtn" class="btn btn--ghost btn--sm">↩ Undo</button>

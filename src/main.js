@@ -157,12 +157,35 @@ function setBar(fillId, valId, score) {
   val.className    = `score-val col-${cls}`;
 }
 
+// ── Tool switching ─────────────────────────────────────────────────────
+const penBtn    = document.getElementById('penBtn');
+const eraserBtn = document.getElementById('eraserBtn');
+const brushSlider = document.getElementById('brushSize');
+
+const TOOL_RANGE = {
+  pen:    { min: 1,  max: 12 },
+  eraser: { min: 2,  max: 60 },
+};
+
+function switchTool(mode) {
+  dc.setMode(mode);
+  penBtn.classList.toggle('is-active', mode === 'pen');
+  eraserBtn.classList.toggle('is-active', mode === 'eraser');
+  const range = TOOL_RANGE[mode];
+  brushSlider.min   = range.min;
+  brushSlider.max   = range.max;
+  brushSlider.value = Math.round(dc.getBrushSize());
+}
+
+penBtn.addEventListener('click',    () => switchTool('pen'));
+eraserBtn.addEventListener('click', () => switchTool('eraser'));
+
 // ── Controls ───────────────────────────────────────────────────────────
 document.getElementById('generateBtn').addEventListener('click', generate);
 document.getElementById('revealBtn').addEventListener('click', revealRatio);
 document.getElementById('analyzeBtn').addEventListener('click', analyze);
 
-document.getElementById('brushSize').addEventListener('input', e => {
+brushSlider.addEventListener('input', e => {
   dc.setBrushSize(e.target.value);
 });
 
@@ -185,6 +208,10 @@ document.addEventListener('keydown', e => {
     e.preventDefault(); analyze();
   } else if (e.key === ' ') {
     e.preventDefault(); generate();
+  } else if (e.key === 'e' || e.key === 'E') {
+    switchTool('eraser');
+  } else if (e.key === 'p' || e.key === 'P') {
+    switchTool('pen');
   }
 });
 
@@ -206,4 +233,5 @@ document.addEventListener('fullscreenchange', () => {
 });
 
 // ── Init ───────────────────────────────────────────────────────────────
+switchTool('pen'); // apply stored size + correct slider range
 generate();
