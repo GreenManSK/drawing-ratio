@@ -147,6 +147,7 @@ input[type="range"] {
 .btn--success:hover { background: #16a34a; border-color: #16a34a; }
 
 .btn--sm { font-size: 0.78rem; padding: 4px 10px; height: 28px; }
+.btn--icon { font-size: 1rem; padding: 4px 7px; line-height: 1; }
 
 /* ── Canvas container ───────────────────────────────────────────────── */
 .canvas-container {

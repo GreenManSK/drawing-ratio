@@ -188,5 +188,22 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ── Fullscreen ─────────────────────────────────────────────────────────
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+fullscreenBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  const full = !!document.fullscreenElement;
+  fullscreenBtn.textContent = full ? '⊡' : '⛶';
+  fullscreenBtn.title = full ? 'Exit fullscreen' : 'Enter fullscreen';
+});
+
 // ── Init ───────────────────────────────────────────────────────────────
 generate();
