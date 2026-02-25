@@ -16,6 +16,7 @@ export class DrawingCanvas {
     this.penSize    = Number(localStorage.getItem(LS_PEN_KEY))    || DEFAULT_PEN_SIZE;
     this.eraserSize = Number(localStorage.getItem(LS_ERASER_KEY)) || DEFAULT_ERASER_SIZE;
     this.isDrawing = false;
+    this._activePointerId = null; // for palm rejection: lock to first accepted pointer
     this._overlayFn = null;
     this._rafId = null;
 
@@ -70,9 +71,25 @@ export class DrawingCanvas {
     };
   }
 
+  _isPalmRejected(e) {
+    // If a pen pointer is active, reject any subsequent touch (palm)
+    if (this.isDrawing && e.pointerType === "touch" && this._activePointerId !== e.pointerId) return true;
+    // Reject touch when a pen/stylus has been seen (likely a pen tablet)
+    if (e.pointerType === "touch" && this._hasPen) return true;
+    return false;
+  }
+
   _onDown(e) {
     e.preventDefault();
+    if (this._isPalmRejected(e)) return;
+
+    // Track whether this device has a pen (used to auto-enable palm rejection)
+    if (e.pointerType === "pen") this._hasPen = true;
+    // If already drawing with another pointer, ignore (first pointer wins)
+    if (this.isDrawing) return;
+
     this.canvas.setPointerCapture(e.pointerId);
+    this._activePointerId = e.pointerId;
     this.isDrawing = true;
     this._overlayFn = null; // clear overlay when user starts drawing
     this.canvas.classList.add("is-drawing");
@@ -87,6 +104,7 @@ export class DrawingCanvas {
 
   _onMove(e) {
     if (!this.isDrawing) return;
+    if (e.pointerId !== this._activePointerId) return;
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     for (const ev of events) {
@@ -97,7 +115,9 @@ export class DrawingCanvas {
 
   _onUp(e) {
     if (!this.isDrawing) return;
+    if (e.pointerId !== this._activePointerId) return;
     this.isDrawing = false;
+    this._activePointerId = null;
     this.canvas.classList.remove("is-drawing");
     if (this.currentStroke && this.currentStroke.points.length > 0) {
       this.strokes.push(this.currentStroke);
