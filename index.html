@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing Ratio Trainer</title>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Left: Reference Panel -->
+    <div class="panel" id="refPanel">
+      <div class="panel__header">
+        <h2>Reference</h2>
+        <div class="panel__controls">
+          <select id="shapeType">
+            <option value="random">Random</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="ellipse">Ellipse</option>
+            <option value="triangle">Triangle</option>
+            <option value="complex">Complex</option>
+            <option value="complex-rounded">Complex Rounded</option>
+          </select>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <button id="generateBtn" class="btn btn--primary">New Shape</button>
+        </div>
+      </div>
+
+      <div class="canvas-container" id="refContainer">
+        <canvas id="refCanvas"></canvas>
+      </div>
+
+      <div class="panel__footer">
+        <button id="revealBtn" class="btn btn--ghost btn--sm">Show Ratio</button>
+        <span class="ratio-display" id="ratioDisplay"></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Right: Drawing Panel -->
+    <div class="panel" id="drawPanel">
+      <div class="panel__header">
+        <h2>Your Drawing</h2>
+        <div class="panel__controls">
+          <label class="brush-label">
+            Brush
+            <input type="range" id="brushSize" min="1" max="12" value="3">
+          </label>
+          <button id="undoBtn" class="btn btn--ghost btn--sm">↩ Undo</button>
+          <button id="clearBtn" class="btn btn--ghost btn--sm btn--danger">Clear</button>
+          <button id="analyzeBtn" class="btn btn--success">Analyze</button>
+        </div>
+      </div>
+
+      <div class="canvas-container" id="drawContainer">
+        <canvas id="drawCanvas"></canvas>
+      </div>
+
+      <div class="panel__footer scores" id="scores">
+        <div class="score-group">
+          <span class="score-label">Ratio</span>
+          <div class="score-bar"><div class="score-bar__fill" id="ratioFill"></div></div>
+          <span class="score-val" id="ratioVal">—</span>
+          <span class="score-detail" id="ratioDetail"></span>
+        </div>
+        <div class="score-group">
+          <span class="score-label">Size</span>
+          <div class="score-bar"><div class="score-bar__fill" id="sizeFill"></div></div>
+          <span class="score-val" id="sizeVal">—</span>
+          <span class="score-detail" id="sizeDetail"></span>
+        </div>
+        <div class="score-group">
+          <span class="score-label">Shape</span>
+          <div class="score-bar"><div class="score-bar__fill" id="shapeFill"></div></div>
+          <span class="score-val" id="shapeVal">—</span>
+          <span class="score-detail" id="shapeDetail"></span>
+        </div>
+        <div class="score-overall">
+          <span class="score-label">Overall</span>
+          <span class="score-overall__val" id="overallVal">—</span>
+        </div>
+        <p class="score-hint" id="scoreHint"></p>
+      </div>
+    </div>
+
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
